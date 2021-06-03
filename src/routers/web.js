@@ -12,6 +12,8 @@ const UserController = require("../apps/controllers/user");
 
 //Require Middleware
 const AuthMiddleware = require("../apps/middlewares/auth");
+const UploadMiddleware = require("../apps/middlewares/upload");
+
 router.get("/test",TestController.test);
 router.get("/test2", TestController.test2);
 router.get("/test3", TestController.test3);
@@ -21,10 +23,11 @@ const upload = multer({
    dest: __dirname + "/../../temp", 
 });
 
-router.get("/upload", TestController.frmUpload);
+router.get("/upload", TestController.frmUpload);    
 router.post("/upload", upload.single("file_upload"), TestController.fileUpload);
 
-
+router.get("/loadUp",TestController.frmloadUp);
+router.post("/loadUp",upload.single("loadUp_file"),TestController.fileloadUp);
 
 
 router.get("/form", (req,res)=>{
@@ -60,7 +63,7 @@ router.post("/admin/products",AuthMiddleware.checkAdmin, (req,res)=>{
 
 
 router.get("/admin/products/create", ProductController.create);
-router.post("/admin/products/create", ProductController.postCreate);
+router.post("/admin/products/store",UploadMiddleware.single("image"), ProductController.postCreate);
 
 router.get("/admin/products/edit/:id", ProductController.edit);
 
@@ -77,6 +80,12 @@ router.get("/admin/users", UserController.index);
 
 router.get("/admin/add_users", UserController.add);
 router.post("/admin/add_users", UserController.postAdd);
+
+/*const multer = require("multer");
+const upload = multer({
+    dest: __dirname + "/../../temp",
+});
+*/
 
 
 module.exports = router;
